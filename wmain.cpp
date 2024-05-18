@@ -85,7 +85,12 @@ int wmain(int argc, wchar_t **argv) {
         HWND taskbar = FindWindow("Shell_TrayWnd", nullptr);
         if (taskbar) {
             LONG style = GetWindowLong(taskbar, GWL_STYLE);
-            SetWindowLong(taskbar, GWL_STYLE, style ^ WS_VISIBLE);  // 切换可见性
+            // SetWindowLong(taskbar, GWL_STYLE, style ^ WS_VISIBLE); ps:不知道为什么对于win10无效
+            if (style & WS_VISIBLE) {
+                ShowWindow(taskbar, SW_HIDE);
+            } else {
+                ShowWindow(taskbar, SW_SHOW);
+            }
         } else {
             std::cerr << "Taskbar not found.\n";
         }
